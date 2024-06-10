@@ -1,16 +1,10 @@
-import {SelectAiModel} from "./components/SelectAiModel.tsx";
-import {ConfirmationButton} from "./components/ConfirmationButton.tsx";
 import './style.css';
-import {SelectImage} from "./components/SelectImage.tsx";
+import FormComponent from "./components/FormComponent.tsx";
 
 function App() {
-  return <main className={'outer-container'}>
-    <form className={'inner-container'}>
-      <SelectAiModel/>
-      <SelectImage/>
-      <ConfirmationButton/>
-    </form>
-  </main>
+    return <main className={'outer-container'}>
+        <FormComponent/>
+    </main>
 }
 
 export default App

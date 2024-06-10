@@ -1,14 +1,14 @@
-import {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, useState} from 'react';
 import styled from 'styled-components';
 
 const InputContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 `;
 
 const ImageInput = styled.input`
-  display: none;
+    display: none;
 `;
 
 const Label = styled.label`
@@ -19,13 +19,19 @@ const Label = styled.label`
     border-radius: 5px;
     border: 1px solid #fff;
     width: 100%;
+    text-align: center;
 `;
 
 const ImagePreview = styled.img`
-  margin-top: 20px;
+    margin-top: 20px;
+    max-width: 100%;
 `;
 
-export function SelectImage() {
+interface SelectImageProps {
+    onImageChange: (image: string | null) => void;
+}
+
+export const SelectImage: React.FC<SelectImageProps> = ({onImageChange}) => {
     const [image, setImage] = useState<string | null>(null);
 
     const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -33,7 +39,9 @@ export function SelectImage() {
         if (file) {
             const reader = new FileReader();
             reader.onload = () => {
-                setImage(reader.result as string);
+                const result = reader.result as string;
+                setImage(result);
+                onImageChange(result);
             };
             reader.readAsDataURL(file);
         }
@@ -49,7 +57,7 @@ export function SelectImage() {
                 name="imageInput"
             />
             <Label htmlFor="imageInput">Choose Image</Label>
-            {image && <ImagePreview src={image} alt="Preview" />}
+            {image && <ImagePreview src={image} alt="Preview"/>}
         </InputContainer>
     );
-}
+};
