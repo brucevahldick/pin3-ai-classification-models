@@ -5,14 +5,26 @@ import io
 
 # Definir o caminho para os dados e o nome do arquivo do modelo
 path = Path('../pin3-backend/resources/data')
-model_path = 'model_fastai.pkl'
+model_path = '../pin3-backend/resources/data/model_fastai.pkl'
 
-def train_and_save_model(epochs=3, lr=1e-1, batch_size=64, arch=resnet34):
+def train_and_save_model(epochs=1, lr=1e-1, batch_size=128, arch=resnet18):
+    # Verificar se CUDA está disponível e ajustar o dispositivo
+    if torch.cuda.is_available():
+        print("CUDA is available! Using GPU.")
+        defaults.device = torch.device('cuda')
+    else:
+        print("CUDA is not available. Using CPU.")
+        defaults.device = torch.device('cpu')
+    
     # Carregar os dados
-    dls = ImageDataLoaders.from_folder(path, train='train', valid='valid', item_tfms=Resize(224), bs=batch_size, batch_tfms=aug_transforms())
+    dls = ImageDataLoaders.from_folder(
+        path, train='train', valid='valid', 
+        item_tfms=Resize(128), bs=batch_size, 
+        batch_tfms=aug_transforms(do_flip=False)
+    )
 
     # Criar o modelo usando uma arquitetura pré-treinada
-    learn = vision_learner(dls, arch, metrics=[accuracy, Precision(), Recall()])
+    learn = vision_learner(dls, arch, metrics=[accuracy], cbs=[MixedPrecision()])
 
     # Encontrar a melhor taxa de aprendizado
     learn.lr_find()
@@ -22,6 +34,19 @@ def train_and_save_model(epochs=3, lr=1e-1, batch_size=64, arch=resnet34):
 
     # Salvar o modelo treinado
     learn.export(model_path)
+
+
+def evaluate():
+        learn = load_learner(model_path)
+        
+        # Avaliar o modelo atual
+        val_loss, val_metrics = learn.validate()
+        val_accuracy = val_metrics[0]
+        val_precision = val_metrics[1]
+        val_recall = val_metrics[2]
+        
+        print(f"Accuracy: {val_accuracy}, Precision: {val_precision}, Recall: {val_recall}, val_loss: {val_loss}")
+
 
 def evaluate_and_retrain_model(max_iterations, target_accuracy):
     best_accuracy = 0
@@ -81,3 +106,9 @@ def get_fastai_prediction(image_bytes):
     
     # Retornar a classe prevista
     return pred_class
+
+if __name__ == '__main__':
+    # Exemplo de uso
+    train_and_save_model()
+    best_accuracy, best_params = evaluate_and_retrain_model(10, 0.95)
+    print(f"Best Accuracy: {best_accuracy}, Best Params: {best_params}")

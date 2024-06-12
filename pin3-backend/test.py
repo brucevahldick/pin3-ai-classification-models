@@ -8,10 +8,12 @@ model_path_pytorch = 'model_pytorch.pth'
 
 # Importar funções previamente definidas
 
-from fastai_model import train_and_save_model
+from fastai_model import train_and_save_model, evaluate
 
 # Execução Principal
 if __name__ == '__main__':
     # Treinar e salvar o modelo FastAI
     train_and_save_model()
+    # evaluate()
+
 

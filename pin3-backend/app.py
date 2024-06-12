@@ -33,7 +33,7 @@ def handle_form():
     return jsonify({'message': 'Invalid request'}), 400
 
 
-@app.route('/retrain', methods=['GET'])
+@app.route('/retrain', methods=['POST'])
 def retrain():
     accuracy, precision, recall, params = evaluate_and_retrain_model(5, 0.9)
     return jsonify({
