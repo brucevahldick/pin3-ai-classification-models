@@ -1,37 +1,75 @@
-html, body {
-    height: 100%;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+body, html {
     background-color: #000;
+    font-family: Arial, sans-serif;
+    color: #fff;
 }
 
-.outer-container {
-    display: grid;
-    place-items: center;
-    width: 100%;
-    height: 100%;
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #000;
+    color: #fff;
 }
 
 .inner-container {
+    width: 100%;
+    max-width: 400px;
     padding: 20px;
+    background-color: #000;
+    border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 30%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    display: grid;
+    gap: 20px;
 }
 
 button, select {
     border-radius: 5px;
     padding: 10px;
     border: 1px solid #fff;
-    width: 100%;
     background-color: #000;
     color: #fff;
-    text-align: center;
     cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+}
+
+button[type="submit"] {
+    background-color: #000;
+    width: 400px;
+    height: 39px;
+}
+
+select {
+    width: 100%;
+    text-align: center;
+}
+
+button:hover, select:hover {
+    background-color: #fff;
+    color: #000;
+}
+
+input:hover, button:hover {
+    background-color: #fff;
+}
+
+.image-input {
+    display: none;
+}
+
+.image-label {
+    cursor: pointer;
+    padding: 10px;
+    background-color: #000;
+    color: #fff;
+    border-radius: 5px;
+    border: 1px solid #fff;
+    text-align: center;
+    width: 100%;
+}
+
+.image-preview {
+    max-width: 100%;
 }

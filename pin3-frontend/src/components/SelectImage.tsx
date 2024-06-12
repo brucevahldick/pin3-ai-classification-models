@@ -13,13 +13,15 @@ const ImageInput = styled.input`
 
 const Label = styled.label`
     cursor: pointer;
-    padding: 10px;
+    padding: 8px;
     background-color: #000;
     color: #fff;
     border-radius: 5px;
     border: 1px solid #fff;
-    width: 100%;
+    width: 400px;
+    height: 39px;
     text-align: center;
+    box-sizing: border-box;
 `;
 
 const ImagePreview = styled.img`

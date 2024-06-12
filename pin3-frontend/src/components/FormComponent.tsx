@@ -1,7 +1,8 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, {useState, ChangeEvent, FormEvent} from 'react';
 import axios from 'axios';
-import { SelectAiModel } from './SelectAiModel';
-import { SelectImage } from './SelectImage';
+import {SelectAiModel} from './SelectAiModel';
+import {SelectImage} from './SelectImage';
+import PredictionDisplay from './PredictionDisplay';
 
 interface FormData {
     aiModel: string;
@@ -13,6 +14,7 @@ const FormComponent: React.FC = () => {
         aiModel: 'pytorch',
         image: null,
     });
+    const [prediction, setPrediction] = useState<string | null>(null);
 
     const handleModelChange = (e: ChangeEvent<HTMLSelectElement>) => {
         setFormData((prevData) => ({
@@ -31,9 +33,9 @@ const FormComponent: React.FC = () => {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:5000/api/data', formData);
+            const response = await axios.post<{ prediction: string }>('http://localhost:5000/api/data', formData);
             console.log(response.data);
-            // Handle success
+            setPrediction(response.data.prediction);
         } catch (error) {
             console.error('Error:', error);
             // Handle error
@@ -41,11 +43,14 @@ const FormComponent: React.FC = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="inner-container">
-            <SelectAiModel value={formData.aiModel} onChange={handleModelChange} />
-            <SelectImage onImageChange={handleImageChange} />
-            <button type="submit">Submit</button>
-        </form>
+        <div className="form-container">
+            <form onSubmit={handleSubmit} className="inner-container">
+                <SelectAiModel value={formData.aiModel} onChange={handleModelChange}/>
+                <SelectImage onImageChange={handleImageChange}/>
+                {prediction && <PredictionDisplay prediction={prediction}/>}
+                <button type="submit">Submit</button>
+            </form>
+        </div>
     );
 };
 
