@@ -1,5 +1,4 @@
 import os
-import base64
 import time
 import copy
 import torch
@@ -7,14 +6,12 @@ import torch.nn as nn
 import torch.optim as optim
 from torchvision import datasets, models, transforms
 from torch.utils.data import DataLoader
-from flask import Flask, request, jsonify
 from PIL import Image
 import io
 from pathlib import Path
 
-# Definir o caminho para os dados e o nome do arquivo do modelo
 path = Path('../pin3-backend/resources/data')
-model_path = 'model_pytorch2.pth'
+model_path = '../pin3-backend/resources/data/models/model_pytorch.pth'
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -163,13 +160,11 @@ def retrain_model():
 def get_pytorch_prediction(image_bytes):
     dataloaders, dataset_sizes, class_names = load_data()
     print(class_names)
-    # Carregar o modelo treinado
     model = initialize_model(num_classes=len(class_names))
     model.load_state_dict(torch.load(model_path, map_location=device))
     model = model.to(device)
     model.eval()
 
-    # Processar a imagem
     transform = transforms.Compose([
         transforms.Resize((224, 224)),
         transforms.ToTensor(),
@@ -188,21 +183,16 @@ def get_pytorch_prediction(image_bytes):
 
 
 def train_and_save_model(epochs=3, lr=1e-1, batch_size=64, arch=models.resnet34):
-    # Load data
     dataloaders, dataset_sizes, class_names = load_data(batch_size=batch_size)
 
-    # Initialize the model
     model = initialize_model(num_classes=len(class_names))
     model = model.to(device)
 
-    # Define optimizer and loss function
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(model.parameters(), lr=lr, momentum=0.9)
 
-    # Train the model
     model = train_model(model, dataloaders, dataset_sizes, criterion, optimizer, num_epochs=epochs)
 
-    # Save the trained model
     torch.save(model.state_dict(), model_path)
 
 
@@ -231,4 +221,3 @@ def load_data(batch_size=64):
     class_names = image_datasets['train'].classes
 
     return dataloaders, dataset_sizes, class_names
-

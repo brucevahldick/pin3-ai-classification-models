@@ -1,4 +1,3 @@
-# app.py
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import base64
@@ -6,7 +5,7 @@ from pytorch_model import get_pytorch_prediction
 from fastai_model import get_fastai_prediction, evaluate_and_retrain_model
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+CORS(app)
 
 
 @app.route('/api/data', methods=['POST'])
@@ -17,7 +16,6 @@ def handle_form():
     image = data.get('image')
 
     if image:
-        # Assuming the image is base64 encoded
         image_data = image.split(",")[1]
         image_bytes = base64.b64decode(image_data)
 
