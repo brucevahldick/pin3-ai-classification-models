@@ -5,11 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="75a07afe-f35a-4a6a-8173-48c92b591f58" name="Changes" comment="Updating fastai">
+      <change afterPath="$PROJECT_DIR$/pin3-backend/resources/data/models/model_fastai.pth" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/pin3.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/pin3.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pin3-backend/fastai_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/pin3-backend/fastai_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pin3-backend/pytorch_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/pin3-backend/pytorch_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pin3-backend/script_modelo_a.py" beforeDir="false" afterPath="$PROJECT_DIR$/pin3-backend/script_modelo_a.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pin3-backend/script_modelo_b.py" beforeDir="false" afterPath="$PROJECT_DIR$/pin3-backend/script_modelo_b.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pin3-backend/compare_models.py" beforeDir="false" afterPath="$PROJECT_DIR$/pin3-backend/compare_models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pin3-backend/fastai_model_2.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pin3-backend/resources/data/model_fastai.pkl" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,6 +21,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -27,30 +32,51 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.script_modelo_a.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "E:/projects/pin3-ai-classification-models",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.script_modelo_a.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Rafael Schork/Documents/trabalhos-faculdade/pin3-ai-classification-models&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="E:\projects\pin3-ai-classification-models\pin3-backend\resources\data\models" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.compare_models">
+    <configuration name="compare_models" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="pin3" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/pin3-backend" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/pin3-backend/compare_models.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="script_modelo_a" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="pin3" />
-      <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -73,6 +99,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.compare_models" />
         <item itemvalue="Python.script_modelo_a" />
       </list>
     </recent_temporary>
@@ -93,7 +120,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1717938859607</updated>
-      <workItem from="1718186799747" duration="17265000" />
+      <workItem from="1718186799747" duration="13708000" />
     </task>
     <task id="LOCAL-00001" summary="Updating fastai">
       <option name="closed" value="true" />
