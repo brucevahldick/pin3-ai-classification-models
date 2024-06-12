@@ -148,7 +148,7 @@ def retrain_model(num_epochs=25, lr=0.001, momentum=0.9):
     optimizer = optim.SGD(model.parameters(), lr=lr, momentum=momentum)
     best_model = model
 
-    best_loss, best_acc = evaluate_model(model, dataloaders, dataset_sizes, criterion)
+    best_loss, best_acc = evaluate_model()
     for epoch in range(num_epochs):
         print(f"Retraining with epoch {epoch + 1}/{num_epochs}")
         model = train_model(model, dataloaders, dataset_sizes, criterion, optimizer, num_epochs=1)

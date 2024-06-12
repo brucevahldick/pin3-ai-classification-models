@@ -18,7 +18,7 @@ if __name__ == "__main__":
             sys.exit(1)
         print(f"Retraining Model: Parameters; max_iterations={sys.argv[2]}; target_accuracy={sys.argv[3]}; "
               f"epochs={sys.argv[4]}; lr={sys.argv[5]}; batch_size={sys.argv[6]}")
-        evaluate_and_retrain_model(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
+        evaluate_and_retrain_model(int(sys.argv[2]), float(sys.argv[3]), int(sys.argv[4]), float(sys.argv[5]), int(sys.argv[6]))
         print("Model retrained")
     else:
         print(f"Unknown command: {sys.argv[1]}")

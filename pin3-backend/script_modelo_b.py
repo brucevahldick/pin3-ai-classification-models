@@ -5,9 +5,6 @@ if __name__ == "__main__":
     n = len(sys.argv)
     print("Total arguments passed:", n)
 
-    for i in range(1, n):
-        print(sys.argv[i], " ")
-
     if n < 2:
         print("Usage: script.py <evaluate|train|retrain> [additional arguments...]")
         sys.exit(1)
