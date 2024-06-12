@@ -5,17 +5,9 @@ import io
 
 # Definir o caminho para os dados e o nome do arquivo do modelo
 path = Path('../pin3-backend/resources/data')
-model_path = '../pin3-backend/resources/data/model_fastai.pkl'
+model_path = 'model_fastai.pkl'
 
-def train_and_save_model(epochs=1, lr=1e-1, batch_size=128, arch=resnet18):
-    # Verificar se CUDA está disponível e ajustar o dispositivo
-    if torch.cuda.is_available():
-        print("CUDA is available! Using GPU.")
-        defaults.device = torch.device('cuda')
-    else:
-        print("CUDA is not available. Using CPU.")
-        defaults.device = torch.device('cpu')
-    
+def train_and_save_model(epochs=1, lr=1e-1, batch_size=34, arch=resnet34):
     # Carregar os dados
     dls = ImageDataLoaders.from_folder(
         path, train='train', valid='valid', 
@@ -29,12 +21,21 @@ def train_and_save_model(epochs=1, lr=1e-1, batch_size=128, arch=resnet18):
     # Encontrar a melhor taxa de aprendizado
     learn.lr_find()
     
-    # Treinar o modelo
-    learn.fine_tune(epochs, lr)
+    # Treinar o modelo e visualizar a evolução das métricas
+    learn.fine_tune(epochs, lr, cbs=[Recorder()])
+
+    # Plotar a evolução das perdas
+    learn.recorder.plot_loss()
+    
+    # Imprimir a evolução das métricas
+    for epoch in range(epochs):
+        print(f"Epoch {epoch+1}/{epochs}")
+        print(f"Training loss: {learn.recorder.losses[epoch]}")
+        print(f"Validation loss: {learn.recorder.values[epoch][0]}")
+        print(f"Validation accuracy: {learn.recorder.values[epoch][1]}")
 
     # Salvar o modelo treinado
     learn.export(model_path)
-
 
 def evaluate():
         learn = load_learner(model_path)
@@ -107,8 +108,3 @@ def get_fastai_prediction(image_bytes):
     # Retornar a classe prevista
     return pred_class
 
-if __name__ == '__main__':
-    # Exemplo de uso
-    train_and_save_model()
-    best_accuracy, best_params = evaluate_and_retrain_model(10, 0.95)
-    print(f"Best Accuracy: {best_accuracy}, Best Params: {best_params}")
