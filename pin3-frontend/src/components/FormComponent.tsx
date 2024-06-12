@@ -48,7 +48,7 @@ const FormComponent: React.FC = () => {
                 <SelectAiModel value={formData.aiModel} onChange={handleModelChange}/>
                 <SelectImage onImageChange={handleImageChange}/>
                 {prediction && <PredictionDisplay prediction={prediction}/>}
-                <button type="submit">Submit</button>
+                <button type="submit">Classificar</button>
             </form>
         </div>
     );
