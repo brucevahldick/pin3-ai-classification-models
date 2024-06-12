@@ -18,6 +18,7 @@ model_path = 'model_pytorch2.pth'
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
+
 def load_data(batch_size=64):
     data_transforms = {
         'train': transforms.Compose([
@@ -26,7 +27,7 @@ def load_data(batch_size=64):
             transforms.ToTensor(),
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ]),
-        'val': transforms.Compose([
+        'valid': transforms.Compose([
             transforms.Resize((224, 224)),
             transforms.ToTensor(),
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
@@ -35,14 +36,15 @@ def load_data(batch_size=64):
 
     image_datasets = {x: datasets.ImageFolder(os.path.join(path, x),
                                               data_transforms[x])
-                      for x in ['train', 'val']}
+                      for x in ['train', 'valid']}
     dataloaders = {x: DataLoader(image_datasets[x], batch_size=batch_size,
                                  shuffle=True, num_workers=4)
-                   for x in ['train', 'val']}
-    dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'val']}
+                   for x in ['train', 'valid']}
+    dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'valid']}
     class_names = image_datasets['train'].classes
 
     return dataloaders, dataset_sizes, class_names
+
 
 def initialize_model(num_classes, feature_extract=True, use_pretrained=True):
     model_ft = models.resnet34(pretrained=use_pretrained)
@@ -54,6 +56,7 @@ def initialize_model(num_classes, feature_extract=True, use_pretrained=True):
     model_ft.fc = nn.Linear(num_ftrs, num_classes)
     return model_ft
 
+
 def train_model(model, dataloaders, dataset_sizes, criterion, optimizer, num_epochs=25):
     since = time.time()
 
@@ -64,7 +67,7 @@ def train_model(model, dataloaders, dataset_sizes, criterion, optimizer, num_epo
         print(f'Epoch {epoch}/{num_epochs - 1}')
         print('-' * 10)
 
-        for phase in ['train', 'val']:
+        for phase in ['train', 'valid']:
             if phase == 'train':
                 model.train()
             else:
@@ -96,7 +99,7 @@ def train_model(model, dataloaders, dataset_sizes, criterion, optimizer, num_epo
 
             print(f'{phase} Loss: {epoch_loss:.4f} Acc: {epoch_acc:.4f}')
 
-            if phase == 'val' and epoch_acc > best_acc:
+            if phase == 'valid' and epoch_acc > best_acc:
                 best_acc = epoch_acc
                 best_model_wts = copy.deepcopy(model.state_dict())
 
@@ -104,17 +107,18 @@ def train_model(model, dataloaders, dataset_sizes, criterion, optimizer, num_epo
 
     time_elapsed = time.time() - since
     print(f'Training complete in {time_elapsed // 60:.0f}m {time_elapsed % 60:.0f}s')
-    print(f'Best val Acc: {best_acc:.4f}')
+    print(f'Best valid Acc: {best_acc:.4f}')
 
     model.load_state_dict(best_model_wts)
     return model
+
 
 def evaluate_model(model, dataloaders, dataset_sizes, criterion):
     model.eval()
     running_loss = 0.0
     running_corrects = 0
 
-    for inputs, labels in dataloaders['val']:
+    for inputs, labels in dataloaders['valid']:
         inputs = inputs.to(device)
         labels = labels.to(device)
 
@@ -126,12 +130,13 @@ def evaluate_model(model, dataloaders, dataset_sizes, criterion):
         running_loss += loss.item() * inputs.size(0)
         running_corrects += torch.sum(preds == labels.data)
 
-    val_loss = running_loss / dataset_sizes['val']
-    val_acc = running_corrects.double() / dataset_sizes['val']
+    val_loss = running_loss / dataset_sizes['valid']
+    val_acc = running_corrects.double() / dataset_sizes['valid']
 
-    print(f'Val Loss: {val_loss:.4f} Val Acc: {val_acc:.4f}')
+    print(f'Valid Loss: {val_loss:.4f} Valid Acc: {val_acc:.4f}')
 
     return val_loss, val_acc
+
 
 def retrain_model():
     dataloaders, dataset_sizes, class_names = load_data()
@@ -154,13 +159,14 @@ def retrain_model():
 
     return best_model, best_acc, best_loss
 
+
 def get_pytorch_prediction(image_bytes, class_names):
     # Carregar o modelo treinado
     model = initialize_model(num_classes=len(class_names))
     model.load_state_dict(torch.load(model_path, map_location=device))
     model = model.to(device)
     model.eval()
-    
+
     # Processar a imagem
     transform = transforms.Compose([
         transforms.Resize((224, 224)),
@@ -169,9 +175,56 @@ def get_pytorch_prediction(image_bytes, class_names):
     ])
     img = Image.open(io.BytesIO(image_bytes)).convert('RGB')
     img = transform(img).unsqueeze(0).to(device)
-    
+
     with torch.no_grad():
         outputs = model(img)
         _, preds = torch.max(outputs, 1)
-    
+
     return class_names[preds.item()]
+
+
+def train_and_save_model(epochs=3, lr=1e-1, batch_size=64, arch=models.resnet34):
+    # Load data
+    dataloaders, dataset_sizes, class_names = load_data(batch_size=batch_size)
+
+    # Initialize the model
+    model = initialize_model(num_classes=len(class_names))
+    model = model.to(device)
+
+    # Define optimizer and loss function
+    criterion = nn.CrossEntropyLoss()
+    optimizer = optim.SGD(model.parameters(), lr=lr, momentum=0.9)
+
+    # Train the model
+    model = train_model(model, dataloaders, dataset_sizes, criterion, optimizer, num_epochs=epochs)
+
+    # Save the trained model
+    torch.save(model.state_dict(), model_path)
+
+
+def load_data(batch_size=64):
+    data_transforms = {
+        'train': transforms.Compose([
+            transforms.Resize((224, 224)),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+        ]),
+        'valid': transforms.Compose([
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(),
+            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+        ]),
+    }
+
+    image_datasets = {x: datasets.ImageFolder(os.path.join(path, x),
+                                              data_transforms[x])
+                      for x in ['train', 'valid']}
+    dataloaders = {x: DataLoader(image_datasets[x], batch_size=batch_size,
+                                 shuffle=True, num_workers=4)
+                   for x in ['train', 'valid']}
+    dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'valid']}
+    class_names = image_datasets['train'].classes
+
+    return dataloaders, dataset_sizes, class_names
+
