@@ -7,12 +7,7 @@ import io
 path = Path('../pin3-backend/resources/data')
 model_path = '../pin3-backend/resources/data/model_fastai.pkl'
 
-class PrintMetricsCallback(Callback):
-    def after_epoch(self):
-        print(f"Epoch {self.epoch+1}/{self.learn.epochs}")
-        print(f"Training loss: {self.learn.recorder.losses[-1]}")
-        print(f"Validation loss: {self.learn.recorder.values[-1][0]}")
-        print(f"Validation accuracy: {self.learn.recorder.values[-1][1]}")
+
 
 def train_and_save_model(epochs=1, lr=1e-1, batch_size=34, arch=resnet34):
     # Carregar os dados
@@ -23,16 +18,13 @@ def train_and_save_model(epochs=1, lr=1e-1, batch_size=34, arch=resnet34):
     )
 
     # Criar o modelo usando uma arquitetura pré-treinada
-    learn = vision_learner(dls, arch, metrics=[accuracy], cbs=[MixedPrecision(), PrintMetricsCallback()])
+    learn = vision_learner(dls, arch, metrics=[accuracy], cbs=[MixedPrecision()])
 
     # Encontrar a melhor taxa de aprendizado
     learn.lr_find()
     
     # Treinar o modelo e visualizar a evolução das métricas
     learn.fine_tune(epochs, lr)
-
-    # Plotar a evolução das perdas
-    learn.recorder.plot_loss()
 
     # Salvar o modelo treinado
     learn.export(model_path)
