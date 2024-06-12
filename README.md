@@ -1,5 +1,8 @@
 # pin3-ai-classification-models
 
+### Início
+- Validar se o arquivo model_fastai.pht está presente no seguinte path ./resources/data/models/model_fastai.pth caso não esteja seja necessario adicionar o mesmo ou gerar um do zero
+
 ### Script para a construção do modelo A
 - O artefato correspondente ao script para a construção do modelo A é o script_modelo_a.py dentro de pin3-backend
 - Argumentos para utilização do script
@@ -49,4 +52,5 @@ python .\compare_models.py
 
 ### Aplicação Web
 - Iniciar o app.py dentro de pin3-backend que corresponde ao servidor do flask
+- Rodar o comando "npm install" no pin3-frontend para que todas as dependencias sejam instaladas
 - Rodar o comando "npm run dev" no pin3-frontend e abrir o link do servidor para acessar o frontend
