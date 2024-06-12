@@ -5,7 +5,14 @@ import io
 
 # Definir o caminho para os dados e o nome do arquivo do modelo
 path = Path('../pin3-backend/resources/data')
-model_path = 'model_fastai.pkl'
+model_path = '../pin3-backend/resources/data/model_fastai.pkl'
+
+class PrintMetricsCallback(Callback):
+    def after_epoch(self):
+        print(f"Epoch {self.epoch+1}/{self.learn.epochs}")
+        print(f"Training loss: {self.learn.recorder.losses[-1]}")
+        print(f"Validation loss: {self.learn.recorder.values[-1][0]}")
+        print(f"Validation accuracy: {self.learn.recorder.values[-1][1]}")
 
 def train_and_save_model(epochs=1, lr=1e-1, batch_size=34, arch=resnet34):
     # Carregar os dados
@@ -16,38 +23,30 @@ def train_and_save_model(epochs=1, lr=1e-1, batch_size=34, arch=resnet34):
     )
 
     # Criar o modelo usando uma arquitetura pré-treinada
-    learn = vision_learner(dls, arch, metrics=[accuracy], cbs=[MixedPrecision()])
+    learn = vision_learner(dls, arch, metrics=[accuracy], cbs=[MixedPrecision(), PrintMetricsCallback()])
 
     # Encontrar a melhor taxa de aprendizado
     learn.lr_find()
     
     # Treinar o modelo e visualizar a evolução das métricas
-    learn.fine_tune(epochs, lr, cbs=[Recorder()])
+    learn.fine_tune(epochs, lr)
 
     # Plotar a evolução das perdas
     learn.recorder.plot_loss()
-    
-    # Imprimir a evolução das métricas
-    for epoch in range(epochs):
-        print(f"Epoch {epoch+1}/{epochs}")
-        print(f"Training loss: {learn.recorder.losses[epoch]}")
-        print(f"Validation loss: {learn.recorder.values[epoch][0]}")
-        print(f"Validation accuracy: {learn.recorder.values[epoch][1]}")
 
     # Salvar o modelo treinado
     learn.export(model_path)
 
 def evaluate():
-        learn = load_learner(model_path)
+    learn = load_learner(model_path)
         
-        # Avaliar o modelo atual
-        val_loss, val_metrics = learn.validate()
-        val_accuracy = val_metrics[0]
-        val_precision = val_metrics[1]
-        val_recall = val_metrics[2]
-        
-        print(f"Accuracy: {val_accuracy}, Precision: {val_precision}, Recall: {val_recall}, val_loss: {val_loss}")
-
+    # Avaliar o modelo atual
+    val_loss, val_metrics = learn.validate()
+    val_accuracy = val_metrics[0]
+    val_precision = val_metrics[1]
+    val_recall = val_metrics[2]
+    
+    print(f"Accuracy: {val_accuracy}, Precision: {val_precision}, Recall: {val_recall}, val_loss: {val_loss}")
 
 def evaluate_and_retrain_model(max_iterations, target_accuracy):
     best_accuracy = 0
@@ -107,4 +106,3 @@ def get_fastai_prediction(image_bytes):
     
     # Retornar a classe prevista
     return pred_class
-
