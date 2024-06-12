@@ -5,12 +5,12 @@ import io
 
 # Definir o caminho para os dados e o nome do arquivo do modelo
 path = Path('../pin3-backend/resources/data')
-model_path = '../pin3-backend/resources/data/model_fastai.pkl'
+model_path = './models/model_fastai.pkl'
 
 
 
-def train_and_save_model(epochs=1, lr=1e-1, batch_size=34, arch=resnet34):
-    # Carregar os dados
+def train_and_save_model(epochs=1, lr=1e-1, batch_size=32, arch=resnet18):
+    # Load data
     dls = ImageDataLoaders.from_folder(
         path, train='train', valid='valid', 
         item_tfms=Resize(128), bs=batch_size, 
@@ -20,13 +20,16 @@ def train_and_save_model(epochs=1, lr=1e-1, batch_size=34, arch=resnet34):
     # Criar o modelo usando uma arquitetura pré-treinada
     learn = vision_learner(dls, arch, metrics=[accuracy], cbs=[MixedPrecision()])
 
-    # Encontrar a melhor taxa de aprendizado
+    # Find the best learning rate
     learn.lr_find()
     
-    # Treinar o modelo e visualizar a evolução das métricas
+    # Train the model and visualize the metric evolution
     learn.fine_tune(epochs, lr)
 
-    # Salvar o modelo treinado
+    # Create the directory if it does not exist
+    os.makedirs(os.path.dirname(model_path), exist_ok=True)
+    
+    # Save the trained model
     learn.export(model_path)
 
 def evaluate():
