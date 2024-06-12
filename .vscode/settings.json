@@ -1,0 +1,3 @@
+{
+  "python.analysis.extraPaths": ["./pin3-backend/fastai"]
+}

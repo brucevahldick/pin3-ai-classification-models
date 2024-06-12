@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import base64
 from pytorch_model import get_pytorch_prediction
-from fastai_model import get_fastai_prediction, evaluate_and_retrain_model
+from fastai_model import get_fastai_prediction
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
