@@ -9,7 +9,7 @@ path = Path('../pin3-backend/resources/data')
 model_path = './resources/data/models/model_fastai.pth'
 
 
-def train_and_save_model(epochs=1, lr=1.01, batch_size=32, arch=resnet18):
+def train_and_save_model(epochs=4, lr=1e-1, batch_size=64, arch=resnet34):
     # Load data
     dls = ImageDataLoaders.from_folder(
         path, train='train', valid='valid',
@@ -18,13 +18,12 @@ def train_and_save_model(epochs=1, lr=1.01, batch_size=32, arch=resnet18):
     )
 
     # Create the model using a pre-trained architecture
-    learn = vision_learner(dls, arch, metrics=[accuracy], cbs=[MixedPrecision()])
+    learn = vision_learner(dls, arch, metrics=[accuracy, Precision(average='macro'), Recall(average='macro')], cbs=[MixedPrecision()])
 
     # Find the best learning rate if not provided
     if lr is None:
-        lr_min, lr_steep = learn.lr_find()
-        lr = lr_steep
-        print(f"Suggested learning rates: {lr_min} (minimum loss), {lr_steep} (steepest point)")
+        lr_find_result = learn.lr_find()
+        lr = lr_find_result.valley  # Using the learning rate from the valley point
         print(f"Using learning rate: {lr}")
 
     # Train only the head for a few epochs, then unfreeze and continue training
@@ -48,14 +47,14 @@ def evaluate():
     print('model loaded.')
 
     # Avaliar o modelo atual
-    val_loss, val_metrics = learn.validate()
+    val_loss, val_accuracy, val_precision, val_recall = learn.validate()
     # Print val_metrics for debugging
-    print(f"val_metrics: {val_metrics}")
+    # print(f"val_metrics: {val_metrics}")
 
     # val_accuracy = val_metrics[0] if len(val_metrics) > 0 else None
     # val_precision = val_metrics[1] if len(val_metrics) > 1 else None
     # val_recall = val_metrics[2] if len(val_metrics) > 2 else None
-    # print(f"Accuracy: {val_accuracy}, Precision: {val_precision}, Recall: {val_recall}, val_loss: {val_loss}")
+    print(f"Accuracy: {val_accuracy}, Precision: {val_precision}, Recall: {val_recall}, val_loss: {val_loss}")
     print(f"val_loss: {val_loss}")
 
 

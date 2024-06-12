@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="75a07afe-f35a-4a6a-8173-48c92b591f58" name="Changes" comment="" />
+    <list default="true" id="75a07afe-f35a-4a6a-8173-48c92b591f58" name="Changes" comment="Updating fastai">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pin3-backend/fastai_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/pin3-backend/fastai_model.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -82,12 +85,25 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1717938859607</updated>
-      <workItem from="1718186799747" duration="5204000" />
+      <workItem from="1718186799747" duration="9398000" />
     </task>
+    <task id="LOCAL-00001" summary="Updating fastai">
+      <option name="closed" value="true" />
+      <created>1718192468790</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1718192468790</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Updating fastai" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updating fastai" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/pin3_ai_classification_models$script_modelo_a.coverage" NAME="script_modelo_a Coverage Results" MODIFIED="1718191042390" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pin3-backend" />
