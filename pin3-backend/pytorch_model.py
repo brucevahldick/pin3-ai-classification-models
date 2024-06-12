@@ -28,8 +28,8 @@ class SimpleCNN(nn.Module):
 
 # Load the model (assuming the model is already trained and saved)
 model = SimpleCNN()
-model.load_state_dict(torch.load('pytorch_model.pth'))
-model.eval()
+# model.load_state_dict(torch.load('pytorch_model.pth'))
+# model.eval()
 
 
 def transform_image(image_bytes):
@@ -42,7 +42,7 @@ def transform_image(image_bytes):
     return transform(image).unsqueeze(0)
 
 
-def get_pytorch_prediction(image_bytes):
+def get_Pytorch_prediction(image_bytes):
     tensor = transform_image(image_bytes)
     outputs = model(tensor)
     _, predicted = torch.max(outputs, 1)

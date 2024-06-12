@@ -33,8 +33,7 @@ def load_data(batch_size=64):
         ]),
     }
 
-    data_dir = 'path_to_your_data'
-    image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x),
+    image_datasets = {x: datasets.ImageFolder(os.path.join(path, x),
                                               data_transforms[x])
                       for x in ['train', 'val']}
     dataloaders = {x: DataLoader(image_datasets[x], batch_size=batch_size,

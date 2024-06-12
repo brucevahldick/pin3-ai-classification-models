@@ -4,10 +4,10 @@ from PIL import Image
 import io
 
 # Definir o caminho para os dados e o nome do arquivo do modelo
-path = Path('pin3-backend\resources\data')
+path = Path('../pin3-backend/resources/data')
 model_path = 'model_fastai.pkl'
 
-def train_and_save_model(epochs=3, lr=1e-3, batch_size=64, arch=resnet34):
+def train_and_save_model(epochs=3, lr=1e-1, batch_size=64, arch=resnet34):
     # Carregar os dados
     dls = ImageDataLoaders.from_folder(path, train='train', valid='valid', item_tfms=Resize(224), bs=batch_size, batch_tfms=aug_transforms())
 
@@ -27,7 +27,7 @@ def evaluate_and_retrain_model(max_iterations, target_accuracy):
     best_accuracy = 0
     best_precision = 0
     best_recall = 0
-    best_params = {'epochs': 3, 'lr': 1e-3, 'batch_size': 64, 'arch': resnet34}
+    best_params = {'epochs': 3, 'lr': 1e-1, 'batch_size': 64, 'arch': resnet34}
 
     if not os.path.exists(model_path):
         train_and_save_model()

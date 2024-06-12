@@ -2,8 +2,8 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import base64
-from pytorch_model import get_pytorch_prediction
-from fastai_model import get_fastai_prediction
+from pytorch_model import get_Pytorch_prediction
+from fastai_model import get_fastai_prediction, evaluate_and_retrain_model
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -21,7 +21,8 @@ def handle_form():
         image_bytes = base64.b64decode(image_data)
 
         if ai_model == 'pytorch':
-            prediction = get_pytorch_prediction(image_bytes)
+            a = 1
+            # prediction = get_Pytorch_prediction(image_bytes)
         elif ai_model == 'fastai':
             prediction = get_fastai_prediction(image_bytes)
         else:
@@ -32,7 +33,7 @@ def handle_form():
     return jsonify({'message': 'Invalid request'}), 400
 
 
-@app.route('/retrain', methods=['POST'])
+@app.route('/retrain', methods=['GET'])
 def retrain():
     accuracy, precision, recall, params = evaluate_and_retrain_model(5, 0.9)
     return jsonify({
