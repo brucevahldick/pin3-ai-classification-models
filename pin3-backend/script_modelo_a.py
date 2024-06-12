@@ -1,7 +1,6 @@
 from fastai_model import train_and_save_model, evaluate, evaluate_and_retrain_model
 import sys
 
-# total arguments
 n = len(sys.argv)
 print("Total arguments passed:", n)
 

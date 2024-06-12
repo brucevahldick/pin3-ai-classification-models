@@ -1,8 +1,6 @@
-from pytorch_model import train_and_save_model
 from pytorch_model import train_and_save_model, evaluate_model, retrain_model
 import sys
 
-# total arguments
 n = len(sys.argv)
 print("Total arguments passed:", n)
 
