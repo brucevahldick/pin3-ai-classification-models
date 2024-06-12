@@ -13,7 +13,7 @@ import io
 from pathlib import Path
 
 # Definir o caminho para os dados e o nome do arquivo do modelo
-path = Path('pin3-backend\resources\data')
+path = Path('../pin3-backend/resources/data')
 model_path = 'model_pytorch2.pth'
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -109,7 +109,7 @@ def train_model(model, dataloaders, dataset_sizes, criterion, optimizer, num_epo
     model.load_state_dict(best_model_wts)
     return model
 
-def evaluate_model(model, dataloaders, criterion):
+def evaluate_model(model, dataloaders, dataset_sizes, criterion):
     model.eval()
     running_loss = 0.0
     running_corrects = 0
@@ -133,16 +133,20 @@ def evaluate_model(model, dataloaders, criterion):
 
     return val_loss, val_acc
 
-def retrain_model(model, dataloaders, dataset_sizes, num_classes, num_epochs=25):
+def retrain_model():
+    dataloaders, dataset_sizes, class_names = load_data()
+    num_classes = len(class_names)
+    model = initialize_model(num_classes)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
     best_model = model
 
-    best_loss, best_acc = evaluate_model(model, dataloaders, criterion)
+    best_loss, best_acc = evaluate_model(model, dataloaders, dataset_sizes, criterion)
+    num_epochs = 25
     for epoch in range(num_epochs):
         print(f"Retraining with epoch {epoch + 1}/{num_epochs}")
         model = train_model(model, dataloaders, dataset_sizes, criterion, optimizer, num_epochs=1)
-        val_loss, val_acc = evaluate_model(model, dataloaders, criterion)
+        val_loss, val_acc = evaluate_model(model, dataloaders, dataset_sizes, criterion)
         if val_acc > best_acc:
             best_model = model
             best_acc = val_acc
@@ -150,7 +154,7 @@ def retrain_model(model, dataloaders, dataset_sizes, num_classes, num_epochs=25)
 
     return best_model, best_acc, best_loss
 
-def get_pytorch_prediction(image_bytes):
+def get_pytorch_prediction(image_bytes, class_names):
     # Carregar o modelo treinado
     model = initialize_model(num_classes=len(class_names))
     model.load_state_dict(torch.load(model_path, map_location=device))
