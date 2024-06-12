@@ -58,7 +58,7 @@ export const SelectImage: React.FC<SelectImageProps> = ({onImageChange}) => {
                 id="imageInput"
                 name="imageInput"
             />
-            <Label htmlFor="imageInput">Selecione Imagem...</Label>
+            <Label htmlFor="imageInput">Selecione a Imagem</Label>
             {image && <ImagePreview src={image} alt="Preview"/>}
         </InputContainer>
     );
