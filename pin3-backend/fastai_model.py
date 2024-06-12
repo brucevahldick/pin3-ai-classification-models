@@ -21,7 +21,8 @@ def train_and_save_model(epochs=6, lr=1e-2, batch_size=64, arch=resnet34):
 
     print("Starting training...")
     # Create the model using a pre-trained architecture
-    learn = vision_learner(dls, arch, metrics=[accuracy, Precision(average='macro'), Recall(average='macro')], cbs=[MixedPrecision()])
+    learn = vision_learner(dls, arch, metrics=[accuracy, Precision(average='macro'), Recall(average='macro')],
+                           cbs=[MixedPrecision()])
     print("Done training...")
 
     # Find the best learning rate if not provided
@@ -67,12 +68,11 @@ def evaluate():
     print(f"val_loss: {val_loss}")
 
 
-
-def evaluate_and_retrain_model(max_iterations, target_accuracy):
+def evaluate_and_retrain_model(max_iterations, target_accuracy, epochs, lr, batch_size):
     best_accuracy = 0
     best_precision = 0
     best_recall = 0
-    best_params = {'epochs': 3, 'lr': 1e-1, 'batch_size': 64, 'arch': resnet34}
+    best_params = {'epochs': epochs, 'lr': lr, 'batch_size': batch_size, 'arch': resnet34}
 
     if not os.path.exists(model_path):
         train_and_save_model()
@@ -116,7 +116,6 @@ def evaluate_and_retrain_model(max_iterations, target_accuracy):
 def get_fastai_prediction(image_bytes):
     # Load the entire Learner object
     learn = torch.load(model_path)
-
 
     # Try to open the image
     try:

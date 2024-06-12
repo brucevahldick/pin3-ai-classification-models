@@ -110,7 +110,12 @@ def train_model(model, dataloaders, dataset_sizes, criterion, optimizer, num_epo
     return model
 
 
-def evaluate_model(model, dataloaders, dataset_sizes, criterion):
+def evaluate_model():
+    dataloaders, dataset_sizes, class_names = load_data()
+    num_classes = len(class_names)
+    model = initialize_model(num_classes)
+    criterion = nn.CrossEntropyLoss()
+
     model.eval()
     running_loss = 0.0
     running_corrects = 0
@@ -135,16 +140,15 @@ def evaluate_model(model, dataloaders, dataset_sizes, criterion):
     return val_loss, val_acc
 
 
-def retrain_model():
+def retrain_model(num_epochs=25, lr=0.001, momentum=0.9):
     dataloaders, dataset_sizes, class_names = load_data()
     num_classes = len(class_names)
     model = initialize_model(num_classes)
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+    optimizer = optim.SGD(model.parameters(), lr=lr, momentum=momentum)
     best_model = model
 
     best_loss, best_acc = evaluate_model(model, dataloaders, dataset_sizes, criterion)
-    num_epochs = 25
     for epoch in range(num_epochs):
         print(f"Retraining with epoch {epoch + 1}/{num_epochs}")
         model = train_model(model, dataloaders, dataset_sizes, criterion, optimizer, num_epochs=1)
@@ -155,6 +159,7 @@ def retrain_model():
             best_loss = val_loss
 
     return best_model, best_acc, best_loss
+
 
 
 def get_pytorch_prediction(image_bytes):
