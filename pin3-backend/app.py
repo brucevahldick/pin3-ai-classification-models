@@ -2,7 +2,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import base64
-from pytorch_model import get_Pytorch_prediction
+from pyt import get_pytorch_prediction
 from fastai_model import get_fastai_prediction, evaluate_and_retrain_model
 
 app = Flask(__name__)
@@ -13,6 +13,7 @@ CORS(app)  # Enable CORS for all routes
 def handle_form():
     data = request.json
     ai_model = data.get('aiModel')
+    print(ai_model)
     image = data.get('image')
 
     if image:
@@ -21,8 +22,7 @@ def handle_form():
         image_bytes = base64.b64decode(image_data)
 
         if ai_model == 'pytorch':
-            a = 1
-            # prediction = get_Pytorch_prediction(image_bytes)
+            prediction = get_pytorch_prediction(image_bytes)
         elif ai_model == 'fastai':
             prediction = get_fastai_prediction(image_bytes)
         else:

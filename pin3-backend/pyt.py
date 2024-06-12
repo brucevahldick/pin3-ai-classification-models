@@ -160,7 +160,9 @@ def retrain_model():
     return best_model, best_acc, best_loss
 
 
-def get_pytorch_prediction(image_bytes, class_names):
+def get_pytorch_prediction(image_bytes):
+    dataloaders, dataset_sizes, class_names = load_data()
+    print(class_names)
     # Carregar o modelo treinado
     model = initialize_model(num_classes=len(class_names))
     model.load_state_dict(torch.load(model_path, map_location=device))
@@ -179,6 +181,8 @@ def get_pytorch_prediction(image_bytes, class_names):
     with torch.no_grad():
         outputs = model(img)
         _, preds = torch.max(outputs, 1)
+
+    print(class_names[preds.item()])
 
     return class_names[preds.item()]
 
