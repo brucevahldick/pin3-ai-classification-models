@@ -9,16 +9,20 @@ path = Path('../pin3-backend/resources/data')
 model_path = './resources/data/models/model_fastai.pth'
 
 
-def train_and_save_model(epochs=4, lr=1e-1, batch_size=64, arch=resnet34):
+def train_and_save_model(epochs=6, lr=1e-2, batch_size=64, arch=resnet34):
     # Load data
+    print("Loading data from dataset images: Start")
     dls = ImageDataLoaders.from_folder(
         path, train='train', valid='valid',
         item_tfms=Resize(128), bs=batch_size,
         batch_tfms=aug_transforms(do_flip=False)
     )
+    print("Loading data from dataset images: Done")
 
+    print("Starting training...")
     # Create the model using a pre-trained architecture
     learn = vision_learner(dls, arch, metrics=[accuracy, Precision(average='macro'), Recall(average='macro')], cbs=[MixedPrecision()])
+    print("Done training...")
 
     # Find the best learning rate if not provided
     if lr is None:
@@ -26,16 +30,21 @@ def train_and_save_model(epochs=4, lr=1e-1, batch_size=64, arch=resnet34):
         lr = lr_find_result.valley  # Using the learning rate from the valley point
         print(f"Using learning rate: {lr}")
 
+    print("fit_one_cycle...")
     # Train only the head for a few epochs, then unfreeze and continue training
     learn.fit_one_cycle(epochs, lr)
 
+    print("unfreeze...")
     # Unfreeze the model and continue training for the specified number of epochs
     learn.unfreeze()
+    print("fit_one_cycle...")
     learn.fit_one_cycle(epochs, lr)
 
+    print("Create the directory if it does not exist...")
     # Create the directory if it does not exist
     os.makedirs(os.path.dirname(model_path), exist_ok=True)
 
+    print("Save the entire Learner object...")
     # Save the entire Learner object
     torch.save(learn, model_path)
 
